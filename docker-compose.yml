@@ -1,0 +1,21 @@
+version: "3.1"
+
+services:
+  redis:
+    image: redis
+    network_mode: "bridge"
+  app:
+    build: .
+    ports:
+      - 8000:8000
+    links:
+      - redis
+    volumes:
+      - .:/code
+      - nodemodules:/code/node_modules
+    command: npm run dev
+    environment:
+      - REDIS_HOST=redis
+    network_mode: "bridge"
+volumes:
+  nodemodules:

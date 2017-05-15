@@ -1,0 +1,47 @@
+Demo2
+
+1, Show Dockerfile
+2, Build: docker build -t demo2 .
+3, Run: docker run -it --rm demo2  Expect fail
+4, Add in package.json:    "redis": "",
+5, Build: docker build -t demo2 .
+6, Run: docker run -it --rm demo2  Expect fail again
+7, Editor mode:
+   docker run -it --rm -v $(pwd):/code -p 8000:8000 -v nodemodels:/code/node_modules demo2 npm run dev
+8, docker run --rm -p 6379:6379 -d --name redis redis
+9, Still failes, view slids
+10, docker run -it --rm -v $(pwd):/code -p 8000:8000 -v nodemodels:/code/node_modules --link redis:redis demo2 npm run dev
+11, Edit code to 'redis'
+
+12, Slids om docker compose
+13, Skriv docker-compose.yml
+
+
+version: "3.1"
+
+services:
+  redis:
+    image: redis
+    network_mode: "bridge"
+  app:
+    build: .
+    ports:
+      - 8000:8000
+    links:
+      - redis
+    volumes:
+      - .:/code
+      - nodemodules:/code/node_modules
+    command: npm run dev
+    network_mode: "bridge"
+volumes:
+  nodemodules:
+
+ 14, docker-compose up -d
+ 15, docker-compose logs app
+ 16, add process.env.REDIS_HOST
+     add
+    environment:
+      - REDIS_HOST=redis
+17, docker-compose up -d
+
